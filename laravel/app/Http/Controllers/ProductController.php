@@ -18,6 +18,15 @@ class ProductController extends Controller
         return new JsonResponse($data);
     }
 
+    public function lixeira(): JsonResponse
+    {
+        $produtosExcluidos = Produto::onlyTrashed()->get();
+
+        $produtosExcluidos->makeVisible('deleted_at');
+
+        return response()->json($produtosExcluidos);
+    }
+
     public function destroy(Produto $produto): JsonResponse
     {
         try {
