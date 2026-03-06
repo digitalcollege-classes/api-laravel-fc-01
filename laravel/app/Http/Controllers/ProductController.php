@@ -6,41 +6,36 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Produto;
+use App\Service\ProductService;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
+    public function __construct(
+        private ProductService $productService
+    ) {
+    }
+
     public function list(): JsonResponse
     {
-        $data = Produto::all(); //SELECT * FROM produtos
-
-        return new JsonResponse($data);
+        return new JsonResponse(
+            $this->productService->findAll()
+        );
     }
 
     public function lixeira(): JsonResponse
     {
-        $produtosExcluidos = Produto::onlyTrashed()->get();
-
-        $produtosExcluidos->makeVisible('deleted_at');
-
-        return response()->json($produtosExcluidos);
+        return response()->json(
+            $this->productService->findAllTrashed()
+        );
     }
 
     public function destroy(Produto $produto): JsonResponse
     {
-        try {
-            $produto->delete();
+        $this->productService->remove($produto);
 
-            return response()->json([
-                'message' => 'Produto excluído com sucesso!'
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao excluir produto.',
-                'error' => $e->getMessage()
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        return response()->json(status: Response::HTTP_NO_CONTENT);
     }
 }
 

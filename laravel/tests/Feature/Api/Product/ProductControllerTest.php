@@ -7,6 +7,7 @@ namespace Tests\Feature\Api\Product;
 use App\Models\Produto;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class ProductControllerTest extends TestCase
@@ -52,7 +53,7 @@ class ProductControllerTest extends TestCase
     {
         $response = $this->deleteJson('/api/produtos/2');
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->assertSoftDeleted('produtos', [
             'id' => 2
