@@ -5,7 +5,6 @@ declare(strict_types=1);
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
-// 1. Defina quais pastas o Fixer deve analisar
 $finder = (new Finder())
     ->in([__DIR__])
     ->exclude(['vendor', 'storage', 'bootstrap/cache']) // Pastas comuns para ignorar no Laravel
